@@ -186,7 +186,7 @@ Put the following in the ``tests.py`` file in the ``polls`` application:
             """
             time = timezone.now() + datetime.timedelta(days=30)
             future_question = Question(pub_date=time)
-            self.assertIs(future_question.was_published_recently(), False)
+            self.assertFalse(future_question.was_published_recently())
 
 Here we have created a :class:`django.test.TestCase` subclass with a method that
 creates a ``Question`` instance with a ``pub_date`` in the future. We then check
@@ -211,7 +211,7 @@ and you'll see something like::
     ----------------------------------------------------------------------
     Traceback (most recent call last):
       File "/path/to/mysite/polls/tests.py", line 16, in test_was_published_recently_with_future_question
-        self.assertIs(future_question.was_published_recently(), False)
+        self.assertFalse(future_question.was_published_recently())
     AssertionError: True is not False
 
     ----------------------------------------------------------------------
@@ -233,7 +233,7 @@ What happened is this:
 * in ``test_was_published_recently_with_future_question`` it created a ``Question``
   instance whose ``pub_date`` field is 30 days in the future
 
-* ... and using the ``assertIs()`` method, it discovered that its
+* ... and using the ``assertFalse()`` method, it discovered that its
   ``was_published_recently()`` returns ``True``, though we wanted it to return
   ``False``
 
@@ -294,7 +294,7 @@ more comprehensively:
         """
         time = timezone.now() - datetime.timedelta(days=1, seconds=1)
         old_question = Question(pub_date=time)
-        self.assertIs(old_question.was_published_recently(), False)
+        self.assertFalse(old_question.was_published_recently())
 
     def test_was_published_recently_with_recent_question(self):
         """
@@ -303,7 +303,7 @@ more comprehensively:
         """
         time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
         recent_question = Question(pub_date=time)
-        self.assertIs(recent_question.was_published_recently(), True)
+        self.assertTrue(recent_question.was_published_recently())
 
 And now we have three tests that confirm that ``Question.was_published_recently()``
 returns sensible values for past, recent, and future questions.
